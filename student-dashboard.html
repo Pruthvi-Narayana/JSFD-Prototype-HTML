@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PeerMentor - Student Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background-color: #007bff;
+            color: white;
+        }   
+        .logo h2, nav h2 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+        main {
+            flex-grow: 1;
+            padding: 2rem;
+        }
+        .project {
+            background-color: #ffffff;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        .tasks, .team {
+            background-color: #f0f0f0;
+            padding: 1.5rem;
+            border-radius: 10px;
+        }
+        .task {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #e6e6e6;
+            padding: 1rem;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .task:hover {
+            background-color: #d4d4d4;
+        }
+        .task button {
+            padding: 0.5rem 1.25rem;
+            border: none;
+            border-radius: 5px;
+            background-color: #28a745;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .task button:hover {
+            background-color: #218838;
+        }
+        .team {
+            background-color: #007bff;
+            color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+        }
+        .team-member {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid #ffffff;
+        }
+        .team-member img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 1rem;
+        }
+        .team-member span {
+            margin-left: 1rem;
+        }
+        .team-member:last-child {
+            border-bottom: none;
+        }
+        .actions {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: flex-start;
+            margin-top: 2rem;
+        }
+        .actions button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            background-color: #28a745;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        .actions button:hover {
+            background-color: #218838;
+            transform: translateY(-2px);
+        }
+
+        /* Popup Modal Styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Black with opacity */
+        }
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 2rem;
+            border-radius: 10px;
+            width: 30%;
+            position: relative;
+        }
+        .modal-content h3 {
+            margin-bottom: 1rem;
+        }
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            color: #aaa;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        .close:hover {
+            color: #000;
+        }
+        textarea {
+            width: 100%;
+            height: 80px;
+            padding: 10px;
+            margin-bottom: 1rem;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        .submit-button, .upload-button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            background-color: #28a745;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        .submit-button:hover, .upload-button:hover {
+            background-color: #218838;
+            transform: translateY(-2px);
+        }
+        .file-input {
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <h2>Student Name</h2>
+        </div>
+        <nav>
+            <h2>Project Name</h2>
+            <a href="login.html">Logout</a>
+        </nav>
+    </header>
+
+    <main>
+        <div class="project">
+            <div class="tasks">
+                <div class="task">
+                    <span>Task 1</span>
+                    <button class="done-btn">Done</button>
+                </div>
+                <div class="task">
+                    <span>Task 2</span>
+                    <button class="done-btn">Done</button>
+                </div>
+                <div class="task">
+                    <span>Task 3</span>
+                    <button class="upload-btn">Upload</button>
+                </div>
+                <div class="task">
+                    <span>Task 4</span>
+                    <button class="upload-btn">Upload</button>
+                </div>
+                <div class="task">
+                    <span>Task 5</span>
+                    <button class="upload-btn">Upload</button>
+                </div>
+            </div>
+
+            <div class="team">
+                <div class="team-member">
+                    <img src="icon48.jpg" alt="Team mate 1">
+                    <span>Team Mate 1</span>
+                    <span>3 Done</span>
+                </div>
+                <div class="team-member">
+                    <img src="icon128.png" alt="Team mate 2">
+                    <span>Team Mate 2</span>
+                    <span>1 Done</span>
+                </div>
+                <div class="team-member">
+                    <img src="icon48.jpg" alt="Team mate 3">
+                    <span>Team Mate 3</span>
+                    <span>2 Done</span>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button id="requestReviewBtn">Request a Peer Review</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- The Modal for Peer Review Request -->
+    <div class="modal" id="requestModal">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <h3>Request a Peer Review</h3>
+            <textarea id="requestText" placeholder="Enter your request here..."></textarea>
+            <button class="submit-button" id="submitRequest">Submit</button>
+        </div>
+    </div>
+
+    <!-- The Modal for Upload -->
+    <div class="modal" id="uploadModal">
+        <div class="modal-content">
+            <span class="close" id="closeUploadModal">&times;</span>
+            <h3>Upload a File</h3>
+            <input type="file" class="file-input" id="fileInput" />
+            <button class="upload-button" id="submitUpload">Upload</button>
+        </div>
+    </div>
+
+    <!-- The Modal for Done Confirmation -->
+    <div class="modal" id="doneModal">
+        <div class="modal-content">
+            <span class="close" id="closeDoneModal">&times;</span>
+            <h3>File Submitted</h3>
+            <p id="submittedFileName">Your file has been submitted successfully!</p>
+            <button class="submit-button" id="closeDone">Close</button>
+        </div>
+    </div>
+
+    <script>
+        // Get modal elements
+        const requestModal = document.getElementById("requestModal");
+        const uploadModal = document.getElementById("uploadModal");
+        const doneModal = document.getElementById("doneModal");
+        const closeModal = document.getElementById("closeModal");
+        const closeUploadModal = document.getElementById("closeUploadModal");
+        const closeDoneModal = document.getElementById("closeDoneModal");
+        const requestReviewBtn = document.getElementById("requestReviewBtn");
+        const uploadButtons = document.querySelectorAll('.upload-btn');
+        const doneButtons = document.querySelectorAll('.done-btn');
+
+        // Show Request a Peer Review modal
+        requestReviewBtn.addEventListener("click", function() {
+            requestModal.style.display = "block";
+        });
+
+        // Close Request modal
+        closeModal.addEventListener("click", function() {
+            requestModal.style.display = "none";
+        });
+
+        // Show Upload modal
+        uploadButtons.forEach(button => {
+            button.addEventListener("click", function() {
+                uploadModal.style.display = "block";
+            });
+        });
+
+        // Close Upload modal
+        closeUploadModal.addEventListener("click", function() {
+            uploadModal.style.display = "none";
+        });
+
+        // Show Done modal
+        doneButtons.forEach(button => {
+            button.addEventListener("click", function() {
+                doneModal.style.display = "block";
+                const taskName = this.previousElementSibling.textContent; // Get task name
+                document.getElementById("submittedFileName").innerText = `Your submission for "${taskName}" has been recorded!`;
+            });
+        });
+
+        // Close Done modal
+        closeDoneModal.addEventListener("click", function() {
+            doneModal.style.display = "none";
+        });
+
+        // When the user clicks anywhere outside a modal, close it
+        window.addEventListener("click", function(event) {
+            if (event.target == requestModal) {
+                requestModal.style.display = "none";
+            } else if (event.target == uploadModal) {
+                uploadModal.style.display = "none";
+            } else if (event.target == doneModal) {
+                doneModal.style.display = "none";
+            }
+        });
+
+        // Handle Request Submission
+        document.getElementById("submitRequest").addEventListener("click", function() {
+            const requestText = document.getElementById("requestText").value;
+            if (requestText.trim()) {
+                alert("Request submitted: " + requestText);
+                requestModal.style.display = "none"; // Close modal after submission
+                document.getElementById("requestText").value = ""; // Clear text area
+            } else {
+                alert("Please enter a request.");
+            }
+        });
+
+        // Handle File Upload
+        document.getElementById("submitUpload").addEventListener("click", function() {
+            const fileInput = document.getElementById("fileInput");
+            if (fileInput.files.length > 0) {
+                alert("File uploaded: " + fileInput.files[0].name);
+                uploadModal.style.display = "none"; // Close modal after upload
+                fileInput.value = ""; // Clear file input
+            } else {
+                alert("Please select a file to upload.");
+            }
+        });
+    </script>
+</body>
+</html>

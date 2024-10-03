@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PeerMentor - Teacher Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f6f9;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background-color: #007bff;
+            color: white;
+        }
+        header .logo h2 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+        header nav {
+            display: flex;
+            align-items: center;
+        }
+        header nav span {
+            margin-right: 1.5rem;
+            font-size: 1.2rem;
+        }
+        header nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            background-color: #28a745;
+            transition: background-color 0.3s ease;
+        }
+        header nav a:hover {
+            background-color: #218838;
+        }
+        main {
+            flex-grow: 1;
+            padding: 2rem;
+            display: flex;
+            gap: 2rem;
+        }
+        .tasks, .suggestions {
+            flex: 1;
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .tasks h2, .suggestions h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: #007bff;
+        }
+        .task {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+            background-color: #f8f8f8;
+            border: 1px solid #ddd;
+            transition: background-color 0.3s ease;
+        }
+        .task:hover {
+            background-color: #e0ffe0;
+        }
+        .task button {
+            padding: 0.5rem 1.25rem;
+            background-color: #28a745;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .task button:hover {
+            background-color: #218838;
+        }
+        .suggestions {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .suggestions p {
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+            color: #555;
+        }
+        .suggestions button {
+            padding: 1rem;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .suggestions button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Popup Modal Styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Black with opacity */
+        }
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 2rem;
+            border-radius: 10px;
+            width: 30%;
+            position: relative;
+        }
+        .modal-content h3 {
+            margin-bottom: 1rem;
+        }
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            color: #aaa;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        .close:hover {
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <h2>PeerMentor</h2>
+        </div>
+        <nav>
+            <span>Teacher's Name</span>
+            <a href="login.html">Logout</a>
+        </nav>
+    </header>
+
+    <main>
+        <div class="tasks">
+            <h2>Tasks</h2>
+            <div class="task">
+                <span>Task 1</span>
+                <button class="view-btn" data-task="Task 1">View</button>
+            </div>
+            <div class="task">
+                <span>Task 2</span>
+                <button class="view-btn" data-task="Task 2">View</button>
+            </div>
+            <div class="task">
+                <span>Task 3</span>
+                <button>Undone</button>
+            </div>
+            <div class="task">
+                <span>Task 4</span>
+                <button>Undone</button>
+            </div>
+            <div class="task">
+                <span>Task 5</span>
+                <button>Updone</button>
+            </div>
+        </div>
+        <div class="suggestions">
+            <h2>Suggestions</h2>
+            <p>Providing guidance for the changes to be made.</p>
+            <p>This will be <b>Text Feild.</b></p>
+            <button>Submit</button>
+        </div>
+    </main>
+
+    <!-- The Modal -->
+    <div class="modal" id="taskModal">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <h3>Task Details</h3>
+            <p id="taskText">This is the details of the selected task.</p>
+        </div>
+    </div>
+
+    <script>
+        // Get modal element
+        const modal = document.getElementById("taskModal");
+        const taskText = document.getElementById("taskText");
+        const closeModal = document.getElementById("closeModal");
+
+        // Get view buttons
+        const viewButtons = document.querySelectorAll(".view-btn");
+
+        // When the user clicks on any View button, show the modal
+        viewButtons.forEach(button => {
+            button.addEventListener("click", function() {
+                const taskName = this.getAttribute("data-task");
+                taskText.textContent = `Details for ${taskName}`;
+                modal.style.display = "block";
+            });
+        });
+
+        // When the user clicks on <span> (x), close the modal
+        closeModal.addEventListener("click", function() {
+            modal.style.display = "none";
+        });
+
+        // When the user clicks anywhere outside the modal, close it
+        window.addEventListener("click", function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        });
+    </script>
+</body>
+</html>
